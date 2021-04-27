@@ -20,14 +20,14 @@ Future<String> signInWithGoogle() async {
       await _auth.signInWithCredential(credential);
   final User user = authResult.user;
   if (user != null) {
-// Checking if email and name is null
+    // Checking if email and name is null
     assert(user.email != null);
     assert(user.displayName != null);
     assert(user.photoURL != null);
     name = user.displayName;
     email = user.email;
     imageUrl = user.photoURL;
-// Only taking the first part of the name, i.e., First Name
+    // Only taking the first part of the name, i.e., First Name
     if (name.contains(" ")) {
       name = name.substring(0, name.indexOf(" "));
     }
@@ -40,21 +40,23 @@ Future<String> signInWithGoogle() async {
   }
   return null;
 }
+
 Future<String> signInWithEmailAndPassword(String username, String pass) async {
   await Firebase.initializeApp();
 
-  UserCredential userAuth = (await _auth.signInWithEmailAndPassword(email: username, password: pass));
+  UserCredential userAuth =
+      (await _auth.signInWithEmailAndPassword(email: username, password: pass));
   User user = userAuth.user;
 
- if (user != null) {
+  if (user != null) {
     // Checking if email and name is null
     assert(user.email != null);
-    
+
     name = user.email;
     email = user.email;
     imageUrl = user.email;
     // Only taking the first part of the name, i.e., First Name
-    if (name.contains(" ")) {
+    if (name.contains("@")) {
       name = name.substring(0, name.indexOf("@"));
     }
     assert(!user.isAnonymous);
@@ -65,7 +67,37 @@ Future<String> signInWithEmailAndPassword(String username, String pass) async {
     return '$user';
   }
   return null;
-} 
+}
+
+Future<String> createUserWithEmailAndPassword(
+    String username, String pass) async {
+  await Firebase.initializeApp();
+
+  UserCredential userAuth = (await _auth.createUserWithEmailAndPassword(
+      email: username, password: pass));
+  User user = userAuth.user;
+
+  if (user != null) {
+    // Checking if email and name is null
+    assert(user.email != null);
+
+    name = user.email;
+    email = user.email;
+    imageUrl = user.email;
+    // Only taking the first part of the name, i.e., First Name
+    if (name.contains("@")) {
+      name = name.substring(0, name.indexOf("@"));
+    }
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
+    final User currentUser = _auth.currentUser;
+    assert(user.uid == currentUser.uid);
+    print('signInWithGoogle succeeded: $user');
+    return '$user';
+  }
+  return null;
+}
+
 Future<void> signOutGoogle() async {
   await googleSignIn.signOut();
   print("User Signed Out");

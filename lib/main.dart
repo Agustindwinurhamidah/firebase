@@ -1,10 +1,14 @@
 import 'package:firebase/login_page.dart';
+import 'package:firebase/register_page.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
+  final routes = <String, WidgetBuilder>{
+    RegisterPage.tag: (context) => RegisterPage(),
+  };
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -13,6 +17,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: LoginPage(),
+      routes: routes,
     );
   }
 }
